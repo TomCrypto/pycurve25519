@@ -6,6 +6,8 @@ Python 2.7 wrapper for curve25519 (based on [curve25519-donna](https://code.goog
 Usage
 -----
 
+    import curve25519
+    
     # Generate two private keys
     privateA = curve25519.genkey()
     privateB = curve25519.genkey()
