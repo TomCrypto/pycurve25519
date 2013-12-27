@@ -5,8 +5,11 @@ import unittest
 class TestCurve25519(unittest.TestCase):
 
     def test_genkey(self):
-        # implement mask checking here
-        pass
+        for _ in range(1024):
+            private = bytearray(curve25519.genkey())
+            self.assertEqual(private[ 0] & (~248), 0)   # &= 248 (xxxxx000)
+            self.assertEqual(private[31] & (~127), 0)   # &= 127 (0xxxxxxx)
+            self.assertNotEqual(private[31] & 64 , 0)   # |=  64 (x1xxxxxx)
 
     def test_public(self):
         pri1 = "a8abababababababababababababababababababababababababababababab6b".decode("hex")
@@ -31,7 +34,7 @@ class TestCurve25519(unittest.TestCase):
         self.assertEqual(shared1, "235101b705734aae8d4c2d9d0f1baf90bbb2a8c233d831a80d43815bb47ead10")
 
     def test_shared_2(self):
-        for _ in range(100):
+        for _ in range(1024):
             pri1 = curve25519.genkey()
             pri2 = curve25519.genkey()
             pub1 = curve25519.public(pri1)

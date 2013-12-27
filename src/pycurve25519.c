@@ -1,10 +1,12 @@
 #include <Python.h>
 
-extern void curve25519_donna(uint8_t *mypublic, const uint8_t *secret, const uint8_t *basepoint);
+extern void curve25519_donna(      uint8_t *mypublic,
+                             const uint8_t *secret,
+                             const uint8_t *basepoint);
 
 static const uint8_t base_pt[32] = {9}; // x = 9
 
-// Usage: private = curve25519.genkey() -> generates private key
+// Usage: private = curve25519.genkey() -> generate private key
 static PyObject *curve25519_genkey(PyObject *self, PyObject *args)
 {
     Py_buffer view;
@@ -38,7 +40,7 @@ static PyObject *curve25519_public(PyObject *self, PyObject *args)
     return 0;
 }
 
-// Usage: shared = curve25519.shared(your private, his public)
+// Usage: shared = curve25519.shared(your private key, his public key)
 static PyObject *curve25519_shared(PyObject *self, PyObject *args)
 {
     Py_buffer secret;
