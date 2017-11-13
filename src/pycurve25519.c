@@ -32,13 +32,16 @@ static PyObject *curve25519_genkey(PyObject *self, PyObject *args)
 // Usage: public = curve25519.public(private) -> get public key
 static PyObject *curve25519_public(PyObject *self, PyObject *args)
 {
+    PyObject *ret;
     Py_buffer private;
 
     if (PyArg_ParseTuple(args, "y*", &private))
     {
         uint8_t *pub_key = PyMem_Malloc(32); // public key
         curve25519_donna(pub_key, private.buf, base_pt);
-        return Py_BuildValue("y#", pub_key, 32);
+        ret = Py_BuildValue("y#", pub_key, 32);
+        PyMem_Free(pub_key);
+        return ret;
     }
 
     return 0;
@@ -47,6 +50,7 @@ static PyObject *curve25519_public(PyObject *self, PyObject *args)
 // Usage: shared = curve25519.shared(your private key, his public key)
 static PyObject *curve25519_shared(PyObject *self, PyObject *args)
 {
+    PyObject *ret;
     Py_buffer secret;
     Py_buffer public;
 
@@ -54,7 +58,9 @@ static PyObject *curve25519_shared(PyObject *self, PyObject *args)
     {
         uint8_t *shared = PyMem_Malloc(32); // shared secret
         curve25519_donna(shared, secret.buf, public.buf);
-        return Py_BuildValue("y#", shared, 32);
+        ret = Py_BuildValue("y#", shared, 32);
+        PyMem_Free(shared);
+        return ret;
     }
 
     return 0;
